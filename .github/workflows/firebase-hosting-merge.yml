@@ -108,7 +108,63 @@ jobs:
 
 
 
+  build:
+    name: Build app bundle
+    runs-on: ubuntu-20.04
+    needs: [test] 
 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: "12.x"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Clean flutter
+        run: flutter clean
+
+      - name: Import pub dependencies
+        run: flutter pub get
+
+        
+      - name: Create upload-keystore.jks file
+        id: upload_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "upload-keystore.jks"
+          encodedString: ${{ secrets.UPLOAD_KEYSTORE }}
+
+
+
+
+      - name: Create key.properties
+        run: |
+          echo "storeFile=${{ steps.upload_keystore.outputs.filePath }}" > android/key.properties
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+
+
+      - name: 'Build App Bundle'
+        run: flutter build appbundle
 
 
 
