@@ -47,7 +47,8 @@ jobs:
       - name: Import pub dependencies
         run: flutter pub get
 
-        - name: Create upload-keystore.jks file
+        
+      - name: Create upload-keystore.jks file
         id: upload_keystore
         uses: timheuer/base64-to-file@v1
         with:
