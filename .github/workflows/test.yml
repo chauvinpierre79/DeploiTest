@@ -4,6 +4,9 @@ name: test sur la branche develop
     branches:
       - develop
 
+  pull_request:
+    branches: [ main ]
+
 
 
 jobs:
