@@ -3,12 +3,13 @@
 
 
 
-name: Deploiement appli Flutter
 
- on:
-   push: 
-     branches: 
-       - main
+
+name: Deploy to Firebase Hosting on merge
+'on':
+  push:
+    branches:
+      - main
 
 
 
