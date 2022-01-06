@@ -171,6 +171,10 @@ jobs:
           name: release
           path: build/app/outputs/bundle/release/app-release.aab
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release
+          path: build/app/outputs/apk/release/app-release.apk
 
 
 
